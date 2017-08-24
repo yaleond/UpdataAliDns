@@ -9,6 +9,7 @@ DNSURL = "http://alidns.aliyuncs.com"
 #https://develop.aliyun.com/api?spm=5176.doc29821.2.6.xsUCfs  从此页面进入点击创建secretID\KEY
 Access_Key_ID = "Access_Key_IDAccess_Key_IDAccess_Key_ID"
 Access_Key_Secret = "Access_Key_SecretAccess_Key_Secret"
+updateRecord = ['www','*']
 Version = "2015-01-09"
 DomainName = "xxxxx.com"
 SignatureMethod = "HMAC-SHA1"
@@ -47,12 +48,16 @@ while 1:
         try:
             #print 1
             result =  method.DescribeDomainRecords(DNSURL,Access_Key_Secret,parameters)
+            for record in result['DomainRecords']['Record']:
+                if record['RR'] in updateRecord:
+                    method.UpdateDomainRecord(DNSURL, Access_Key_Secret, parameters,record, myip)
+                    time.sleep(1)
             # print 2
-            print method.UpdateDomainRecord(DNSURL,Access_Key_Secret,parameters,result['DomainRecords']['Record'][0],myip)
+            #print method.UpdateDomainRecord(DNSURL,Access_Key_Secret,parameters,result['DomainRecords']['Record'][0],myip)
             #要等待一秒后再次请求，要不然90%出错
-            time.sleep(1)
+            #time.sleep(1)
 	    # print 3
-            print method.UpdateDomainRecord(DNSURL,Access_Key_Secret,parameters,result['DomainRecords']['Record'][1],myip)
+            #print method.UpdateDomainRecord(DNSURL,Access_Key_Secret,parameters,result['DomainRecords']['Record'][1],myip)
             #print 4
             ipFileW = open(IPFILEPATH, 'w')
             ipFileW.write(myip)
